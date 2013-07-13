@@ -4,7 +4,7 @@
  * @time 2:36 AM
  * @description
  */
-define(function() {
+define(["underscore"], function(_) {
     /**
      * @param {string} nStr
      * @returns {string}
@@ -172,19 +172,16 @@ define(function() {
     }
 
     function deriveAttributes(row, derivedAttributes, f) {
-        var k, v, _ref, _ref2
-        for (k in derivedAttributes) {
-            if (!derivedAttributes.hasOwnProperty(k)) continue
-            v = derivedAttributes[k]
-            row[k] = (_ref = v(row)) != null ? _ref : row[k]
-        }
-        for (k in row) {
-            if (!row.hasOwnProperty(k)) continue
+        _.each(derivedAttributes, function(v, k) {
+            var _ref = v(row)
 
-            if ((_ref2 = row[k]) == null) {
+            row[k] = _ref != null ? _ref : row[k]
+        })
+        _.each(row, function(v, k) {
+            if (v == null) {
                 row[k] = "null"
             }
-        }
+        })
         return f(row)
     }
 
@@ -285,13 +282,13 @@ define(function() {
 
         /**
          *
-         * @param {array|function} input
+         * @param {Array|function} input
          * @param derivedAttributes
          * @param {function} f
          * @returns {*}
          */
         forEachRow: function(input, derivedAttributes, f) {
-            var addRow, compactRow, i, j, k, row, tblCols, _i, _len, _ref, _results, _results2
+            var addRow, row, tblCols
             addRow = function(row) {
                 return deriveAttributes(row, derivedAttributes, f)
             }
@@ -299,29 +296,23 @@ define(function() {
                 return input(addRow)
             } else if (Array.isArray(input)) {
                 if (Array.isArray(input[0])) {
-                    _results = []
-                    for (i in input) {
-                        if (!input.hasOwnProperty(i)) continue
-                        compactRow = input[i]
+                    var _results = []
+
+                    _.each(input, function(compactRow, i) {
                         if (i > 0) {
                             row = {}
-                            _ref = input[0]
-                            for (j in _ref) {
-                                if (!_ref.hasOwnProperty(j)) continue
-                                k = _ref[j]
+
+                            _.each(input[0], function(k, j) {
                                 row[k] = compactRow[j]
-                            }
+                            })
                             _results.push(addRow(row))
                         }
-                    }
+                    })
                     return _results
                 } else {
-                    _results2 = []
-                    for (_i = 0, _len = input.length; _i < _len; _i++) {
-                        row = input[_i]
-                        _results2.push(addRow(row))
-                    }
-                    return _results2
+                    return _.map(input, function(row) {
+                        return addRow(row)
+                    })
                 }
             } else {
                 tblCols = []
