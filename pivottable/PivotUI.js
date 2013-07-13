@@ -29,7 +29,7 @@ define(
         }
 
         return function PivotUI(options) {
-            var aggregator, axisValues, c, colList, controls, effectNames, form, k, pivotTable, radio, refresh, tblCols, tr1, tr2, uiTable, x, y, _i, _j, _k, _l, _len, _len2, _len3, _len4, _len5, _len6, _m, _n, _ref, _ref2, _ref3, _ref4, _ref5
+            var aggregator, axisValues, colList, controls, effectNames, form, pivotTable, radio, refresh, tblCols, tr1, tr2, uiTable, x, _ref2
 
             options = $.extend(defaults, options)
 
@@ -89,10 +89,10 @@ define(
 
             colList = $("<td colspan='2' id='unused' class='pvtAxisContainer pvtHorizList'>")
 
-            tblCols.forEach(function(c, _k) {
+            tblCols.forEach(function(c) {
                 if (options.hiddenAxes.indexOf(c) < 0) {
                     (function(c) {
-                        var btns, colLabel, filterItem, k, numKeys, v, valueList, _l, _len4, _ref2
+                        var btns, colLabel, filterItem, numKeys, valueList
                         numKeys = Object.keys(axisValues[c]).length
                         colLabel = $("<nobr>").text(c)
                         valueList = $("<div>").css({
@@ -118,10 +118,8 @@ define(
                                 return valueList.find("input").attr("checked", false)
                             }))
                             valueList.append(btns)
-                            _ref2 = Object.keys(axisValues[c]).sort()
-
-                            _ref2.forEach(function(k) {
-                                v = axisValues[c][k]
+                            Object.keys(axisValues[c]).sort().forEach(function(k) {
+                                var v = axisValues[c][k]
                                 filterItem = $("<label>")
                                 filterItem.append($("<input type='checkbox' class='pvtFilter'>").attr("checked",
                                     true).data("filter", [c, k]))
@@ -153,11 +151,9 @@ define(
             uiTable.append($("<tr>").append(colList))
             tr1 = $("<tr>")
             aggregator = $("<select id='aggregator'>").css("margin-bottom", "5px").bind("change", refresh)
-            _ref2 = options.aggregators
-            for (x in _ref2) {
-                if (!_ref2.hasOwnProperty(x)) continue
+            _.each(options.aggregators, function(_, x) {
                 aggregator.append($("<option>").val(x).text(x))
-            }
+            })
             tr1.append($("<td id='vals' class='pvtAxisContainer pvtHorizList'>").css("text-align",
                 "center").append(aggregator).append($("<br>")))
             tr1.append($("<td id='cols' class='pvtAxisContainer pvtHorizList'>"))
