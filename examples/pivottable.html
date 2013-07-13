@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PivotTable</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+
+    <script src="libs/require.js"></script>
+    <script>
+        require.config({
+            paths: {
+                jquery: "libs/jquery-1.10.1",
+                underscore: "libs/lodash.min",
+                pivottable: "../pivottable"
+            },
+            shim: {
+                bootstrap: {
+                    deps: ["jquery"]
+                }
+            }
+        })
+    </script>
+    <link rel="stylesheet" href="../pivottable/pivottable.css"/>
+</head>
+<body>
+<div class="container" style="margin-top:40px">
+    <div id="output"></div>
+    <div id="output2"></div>
+</div>
+
+<script>
+    require(["jquery", "pivottable/Pivot"], function($, Pivot) {
+        new Pivot({
+            container: $("#output"),
+            data: [
+                {testRow: "test1", shape: "circle", testCol: "test3", testCol2: "test5", color: "1"},
+                {testRow: "test2", shape: "triangle", testCol: "test4", testCol2: "test6", color: "1"},
+                {testRow: "test1", shape: "circle", testCol: "test3", testCol2: "test7", color: "1"},
+                {testRow: "test1", shape: "triangle", testCol: "test4", testCol2: "test8", color: "2"},
+                {testRow: "test1", shape: "circle", testCol: "test3", testCol2: "test9", color: "2"},
+                {testRow: "test1", shape: "triangle", testCol: "test4", testCol2: "test10", color: "2"}
+            ],
+            rows: ["color", "testRow"],
+            cols: ["shape", "testCol2"]
+        })
+
+        /*new Pivot({
+            container: $("#output2"),
+            data: function() {
+                return [
+                    {color: "blue", shape: "circle"},
+                    {color: "red", shape: "triangle"}
+                ]
+            },
+            rows: ["color"],
+            cols: ["shape"]
+        })*/
+    })
+</script>
+</body>
+</html>
