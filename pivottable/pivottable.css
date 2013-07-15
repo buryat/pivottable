@@ -1,3 +1,24 @@
 table.pivottable {
     width: auto;
 }
+
+.pivottable-values-list {
+    z-index: 100;
+    width: 280px;
+    height: 350px;
+    overflow: scroll;
+    border: 1px solid gray;
+    background: white;
+    display: none;
+    position: absolute;
+    padding: 20px;
+    color: black
+}
+
+.pivottable-effects strong {
+    margin-right: 10px;
+    vertical-align: bottom;
+}
+.pivottable-effects label {
+    margin: 0 20px 0 10px
+}
