@@ -48,51 +48,49 @@ define("pivottable/renderer", ["jquery", "underscore", "pivottable/utilities"], 
         return strSort(a.join(), b.join())
     }
 
-    return function Renderer(option, colsNames, rowsNames, table, totals) {
+    return function Renderer(options, colsNames, rowsNames, table, totals) {
         rowsNames = rowsNames.sort(arrSort)
         colsNames = colsNames.sort(arrSort)
 
+        var html = "<table class='table table-bordered pivottable'><tbody>"
 
-        var result = $("<table class='table table-bordered pivottable'>")
-
-        _.each(option.cols, function(col, j) {
-            var tr = $("<tr>")
-            if (j == 0 && option.rows.length) {
-                tr.append($("<th>").attr("colspan", option.rows.length).attr("rowspan", option.cols.length))
+        _.each(options.cols, function(col, j) {
+            html += "<tr>"
+            if (j == 0 && options.rows.length) {
+                html += "<th colspan='" + options.rows.length + "' rowspan='" + options.cols.length + "'></th>"
             }
-            tr.append($("<th class='pvtAxisLabel'>").text(col))
+            html += "<th class='pvtAxisLabel'>" + col + "</th>"
             _.each(colsNames, function(col_names, i) {
                 var x = spanSize(colsNames, i, j)
                 if (x !== -1) {
-                    var th = $("<th class='pvtColLabel'>").text(col_names[j]).attr("colspan", x)
-                    if (j === option.cols.length - 1 && option.rows.length) {
-                        th.attr("rowspan", 2)
+                    html += "<th class='pvtColLabel' colspan='" + x + "'"
+                    if (j === options.cols.length - 1 && options.rows.length) {
+                        html += " rowspan='2'"
                     }
-                    tr.append(th)
+                    html += ">" + col_names[j] + "</th>"
                 }
             })
             if (j == 0) {
-                tr.append($("<th class='pvtTotalLabel'>").text("Totals").attr("rowspan",
-                    option.cols.length + (option.rows.length ? 0 : 1)))
+                html += "<th class='pvtTotalLabel' rowspan='" + (options.cols.length + (options.rows.length ? 0 : 1)) + "'>Totals</th>"
             }
-            result.append(tr)
+            html += "</tr>"
         })
 
-        if (option.rows.length) {
-            var tr = $("<tr>")
+        if (options.rows.length) {
+            html += "<tr>"
 
-            _.map(option.rows,function(el) {
-                return $("<th class='pvtAxisLabel'>").text(el)
+            _.map(options.rows,function(el) {
+                return "<th class='pvtAxisLabel'>" + el + "</th>"
             }).forEach(function(e) {
-                    tr.append(e)
-                })
+                html += e
+            })
 
-            var th = $("<th>")
-            if (!option.cols.length) {
-                th.addClass("pvtTotalLabel").text("Totals")
+            if (!options.cols.length) {
+                html += "<th class='pvtTotalLabel'>Totals</th>"
+            } else {
+                html += "<th></th>"
             }
-            tr.append(th)
-            result.append(tr)
+            html += "</tr>"
         }
 
         var nullAggregator = {
@@ -105,15 +103,15 @@ define("pivottable/renderer", ["jquery", "underscore", "pivottable/utilities"], 
         }
 
         _.each(rowsNames, function(current_row_names, row_index) {
-            tr = $("<tr>")
+            html += "<tr>"
             _.each(current_row_names, function(row, current_row_index) {
                 var x = spanSize(rowsNames, row_index, current_row_index)
                 if (x !== -1) {
-                    th = $("<th class='pvtRowLabel'>").text(row).attr("rowspan", x)
-                    if (current_row_index === option.rows.length - 1 && option.cols.length !== 0) {
-                        th.attr("colspan", 2)
+                    html += "<th class='pvtRowLabel' rowspan='" + x + "'"
+                    if (current_row_index === options.rows.length - 1 && options.cols.length !== 0) {
+                        html += " colspan='2'"
                     }
-                    tr.append(th)
+                    html += ">" + row + "</th>"
                 }
             })
 
@@ -124,47 +122,31 @@ define("pivottable/renderer", ["jquery", "underscore", "pivottable/utilities"], 
                 var _ref3 = _ref2 != null ? _ref2[current_col_names.join(utils.joinString)] : null,
                     aggregator = _ref3 != null ? _ref3 : nullAggregator,
                     val = aggregator.value()
-                tr.append(
-                    $("<td class='pvtVal row" + row_index + " col" + col_index + "'>")
-                        .text(aggregator.format(val))
-                        .data("value", val)
-                )
+                html += "<td data-value='" + val + "'>" + aggregator.format(val) + "</td>"
             })
 
             var _ref4 = totals.rows[current_row_names.join(utils.joinString)],
                 totalAggregator = _ref4 != null ? _ref4 : nullAggregator,
                 val = totalAggregator.value()
-            tr.append(
-                $("<td class='pvtTotal rowTotal'>")
-                    .text(totalAggregator.format(val))
-                    .data("value", val)
-                    .data("for", "row" + row_index)
-            )
+            html += "<td class='pvtTotal rowTotal' data-value='" + val + "' data-for='row" + row_index + "'>" + totalAggregator.format(val) + "</td>"
 
-            result.append(tr)
+            html += "</tr>"
         })
 
-        tr = $("<tr>")
-        th = $("<th class='pvtTotalLabel'>").text("Totals")
-        th.attr("colspan", option.rows.length + (option.cols.length === 0 ? 0 : 1))
-        tr.append(th)
+        html += "<tr><th class='pvtTotalLabel' colspan='" + (options.rows.length + (options.cols.length === 0 ? 0 : 1)) + "'>Totals</th>"
         _.each(colsNames, function(ca, j) {
             var _ref5 = totals.cols[ca.join(utils.joinString)],
                 totalAggregator = _ref5 != null ? _ref5 : nullAggregator,
                 val = totalAggregator.value()
 
-            tr.append(
-                $("<td class='pvtTotal colTotal'>")
-                    .text(totalAggregator.format(val))
-                    .data("value", val).
-                    data("for", "col" + j)
-            )
+            html += "<td class='pvtTotal colTotal' data-value='" + val + "' data-for='for" + j + "'>" + totalAggregator.format(val) + "</td>"
         })
         var val = totals.all.value()
-        tr.append($("<td class='pvtGrandTotal'>").text(totals.all.format(val)).data("value", val))
-        result.append(tr)
-        result.data("dimensions", [rowsNames.length, colsNames.length])
 
-        return result
+        html += "<td class='pvtGrandTotal' data-value='" + val + "'>" + totals.all.format(val) + "</td></tr>"
+        html += "</tbody></table>"
+
+        options.container.html(html)
+        options.postProcessor(html)
     }
 })

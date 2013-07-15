@@ -189,6 +189,7 @@ define(
                         cols: [],
                         rows: []
                     }
+                var b = new Date().getTime()
 
                 $("#rows li nobr").each(function() {
                     return subopts.rows.push($(this).text())
@@ -227,6 +228,7 @@ define(
                 subopts.data = input
 
                 new Pivot(subopts)
+                console.log(new Date().getTime() - b)
             }
 
             refresh()

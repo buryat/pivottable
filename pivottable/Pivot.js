@@ -92,10 +92,7 @@ function(_, $, utils, Renderer) {
             })
         })()
 
-        var html = Renderer(options, colsNames, rowsNames, table, totals)
-
-        options.container.html(html)
-        options.postProcessor(html)
+        new Renderer(options, colsNames, rowsNames, table, totals)
     }
 
     return Pivot
