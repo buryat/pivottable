@@ -150,7 +150,9 @@ define(
             })
             uiTable.append($("<tr>").append(colList))
             tr1 = $("<tr>")
-            aggregator = $("<select id='aggregator'>").css("margin-bottom", "5px").bind("change", refresh)
+            aggregator = $("<select class='pivottable-aggregator-select'>").css("margin-bottom", "5px").bind("change", function() {
+                refresh()
+            })
             _.each(options.aggregators, function(_, x) {
                 aggregator.append($("<option>").val(x).text(x))
             })
