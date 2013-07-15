@@ -29,7 +29,7 @@ define(
         }
 
         return function PivotUI(options) {
-            var aggregator, axisValues, colList, controls, effectNames, form, pivotTable, radio, refresh, tblCols, tr1, tr2, uiTable, x, _ref2
+            var aggregator, axisValues, colList, controls, effectNames, form, pivotTable, radio, refresh, tblCols, tr1, tr2, uiTable
 
             options = $.extend(defaults, options)
 
@@ -190,8 +190,6 @@ define(
                         rows: []
                     }
 
-                var b = new Date().getTime()
-
                 $("#rows li nobr").each(function() {
                     return subopts.rows.push($(this).text())
                 })
@@ -228,16 +226,16 @@ define(
                 subopts.container = pivotTable
                 subopts.data = input
 
-                var pivot = new Pivot(subopts)
-                console.log(new Date().getTime() - b)
-                return pivot
+                new Pivot(subopts)
             }
 
             refresh()
             $('input[name=effects]').bind("change", refresh)
-            $(".pvtAxisContainer").sortable({
-                connectWith: ".pvtAxisContainer",
-                items: 'li'
-            }).bind("sortstop", refresh)
+            $(".pvtAxisContainer")
+                .sortable({
+                    connectWith: ".pvtAxisContainer",
+                    items: 'li'
+                })
+                .bind("sortstop", refresh)
         }
     })
