@@ -122,7 +122,7 @@ define("pivottable/renderer", ["jquery", "underscore", "pivottable/utilities"], 
                 var _ref3 = _ref2 != null ? _ref2[current_col_names.join(utils.joinString)] : null,
                     aggregator = _ref3 != null ? _ref3 : nullAggregator,
                     val = aggregator.value()
-                html += "<td data-value='" + val + "'>" + aggregator.format(val) + "</td>"
+                html += "<td class='pvtVal row" + row_index + " col" + col_index + "' data-value='" + val + "'>" + aggregator.format(val) + "</td>"
             })
 
             var _ref4 = totals.rows[current_row_names.join(utils.joinString)],
@@ -146,7 +146,7 @@ define("pivottable/renderer", ["jquery", "underscore", "pivottable/utilities"], 
         html += "<td class='pvtGrandTotal' data-value='" + val + "'>" + totals.all.format(val) + "</td></tr>"
         html += "</tbody></table>"
 
-        options.container.html(html)
-        options.postProcessor(html)
+        options.container.html(html).data("dimensions", [rowsNames.length, colsNames.length])
+        options.postProcessor(options.container)
     }
 })
