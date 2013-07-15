@@ -55,9 +55,9 @@ define(["jquery"], function($) {
             }.bind(this)
 
         for (var i = 0; 0 <= numRows ? i < numRows : i > numRows; 0 <= numRows ? i++ : i--) {
-            barcharter(".pvtVal.row" + i)
+            barcharter(".pivottable-value[data-row='" + i + "']")
         }
-        barcharter(".pvtTotal.colTotal")
+        barcharter(".pivottable-total-col")
         return this
     }
 

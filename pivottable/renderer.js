@@ -59,11 +59,11 @@ define("pivottable/renderer", ["jquery", "underscore", "pivottable/utilities"], 
             if (j == 0 && options.rows.length) {
                 html += "<th colspan='" + options.rows.length + "' rowspan='" + options.cols.length + "'></th>"
             }
-            html += "<th class='pvtAxisLabel'>" + col + "</th>"
+            html += "<th class='pivottable-axis-label'>" + col + "</th>"
             _.each(colsNames, function(col_names, i) {
                 var x = spanSize(colsNames, i, j)
                 if (x !== -1) {
-                    html += "<th class='pvtColLabel' colspan='" + x + "'"
+                    html += "<th class='pivottable-col-label' colspan='" + x + "'"
                     if (j === options.cols.length - 1 && options.rows.length) {
                         html += " rowspan='2'"
                     }
@@ -71,7 +71,7 @@ define("pivottable/renderer", ["jquery", "underscore", "pivottable/utilities"], 
                 }
             })
             if (j == 0) {
-                html += "<th class='pvtTotalLabel' rowspan='" + (options.cols.length + (options.rows.length ? 0 : 1)) + "'>Totals</th>"
+                html += "<th class='pivottable-total-label' rowspan='" + (options.cols.length + (options.rows.length ? 1 : 0)) + "'>Totals</th>"
             }
             html += "</tr>"
         })
@@ -80,13 +80,13 @@ define("pivottable/renderer", ["jquery", "underscore", "pivottable/utilities"], 
             html += "<tr>"
 
             _.map(options.rows,function(el) {
-                return "<th class='pvtAxisLabel'>" + el + "</th>"
+                return "<th class='pivottable-axis-label'>" + el + "</th>"
             }).forEach(function(e) {
                 html += e
             })
 
             if (!options.cols.length) {
-                html += "<th class='pvtTotalLabel'>Totals</th>"
+                html += "<th class='pivottable-total-label'>Totals</th>"
             } else {
                 html += "<th></th>"
             }
@@ -107,7 +107,7 @@ define("pivottable/renderer", ["jquery", "underscore", "pivottable/utilities"], 
             _.each(current_row_names, function(row, current_row_index) {
                 var x = spanSize(rowsNames, row_index, current_row_index)
                 if (x !== -1) {
-                    html += "<th class='pvtRowLabel' rowspan='" + x + "'"
+                    html += "<th class='pivottable-row-label' rowspan='" + x + "'"
                     if (current_row_index === options.rows.length - 1 && options.cols.length !== 0) {
                         html += " colspan='2'"
                     }
@@ -122,28 +122,28 @@ define("pivottable/renderer", ["jquery", "underscore", "pivottable/utilities"], 
                 var _ref3 = _ref2 != null ? _ref2[current_col_names.join(utils.joinString)] : null,
                     aggregator = _ref3 != null ? _ref3 : nullAggregator,
                     val = aggregator.value()
-                html += "<td class='pvtVal row" + row_index + " col" + col_index + "' data-value='" + val + "'>" + aggregator.format(val) + "</td>"
+                html += "<td class='pivottable-value' data-row='" + row_index + "' data-col='" + col_index + "' data-value='" + val + "'>" + aggregator.format(val) + "</td>"
             })
 
             var _ref4 = totals.rows[current_row_names.join(utils.joinString)],
                 totalAggregator = _ref4 != null ? _ref4 : nullAggregator,
                 val = totalAggregator.value()
-            html += "<td class='pvtTotal rowTotal' data-value='" + val + "' data-for='row" + row_index + "'>" + totalAggregator.format(val) + "</td>"
+            html += "<td class='pivottable-total-row' data-value='" + val + "' data-for-row='" + row_index + "'>" + totalAggregator.format(val) + "</td>"
 
             html += "</tr>"
         })
 
-        html += "<tr><th class='pvtTotalLabel' colspan='" + (options.rows.length + (options.cols.length === 0 ? 0 : 1)) + "'>Totals</th>"
+        html += "<tr><th class='pivottable-total-label' colspan='" + (options.rows.length + (options.cols.length === 0 ? 0 : 1)) + "'>Totals</th>"
         _.each(colsNames, function(ca, j) {
             var _ref5 = totals.cols[ca.join(utils.joinString)],
                 totalAggregator = _ref5 != null ? _ref5 : nullAggregator,
                 val = totalAggregator.value()
 
-            html += "<td class='pvtTotal colTotal' data-value='" + val + "' data-for='for" + j + "'>" + totalAggregator.format(val) + "</td>"
+            html += "<td class='pivottable-total-col' data-value='" + val + "' data-for='for" + j + "'>" + totalAggregator.format(val) + "</td>"
         })
         var val = totals.all.value()
 
-        html += "<td class='pvtGrandTotal' data-value='" + val + "'>" + totals.all.format(val) + "</td></tr>"
+        html += "<td class='pivottable-grand-total' data-value='" + val + "'>" + totals.all.format(val) + "</td></tr>"
         html += "</tbody></table>"
 
         options.container.html(html).data("dimensions", [rowsNames.length, colsNames.length])

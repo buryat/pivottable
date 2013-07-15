@@ -63,20 +63,20 @@ define(["jquery"], function($) {
 
         switch (scope) {
             case "heatmap":
-                heatmapper(".pvtVal", "red")
+                heatmapper(".pivottable-value", "red")
                 break
             case "rowheatmap":
                 for (var i = 0; 0 <= numRows ? i < numRows : i > numRows; 0 <= numRows ? i++ : i--) {
-                    heatmapper(".pvtVal.row" + i, "red")
+                    heatmapper(".pivottable-value[data-row='" + i + "']", "red")
                 }
                 break
             case "colheatmap":
                 for (var j = 0; 0 <= numCols ? j < numCols : j > numCols; 0 <= numCols ? j++ : j--) {
-                    heatmapper(".pvtVal.col" + j, "red")
+                    heatmapper(".pivottable-value[data-col='" + j + "']", "red")
                 }
         }
-        heatmapper(".pvtTotal.rowTotal", "red")
-        heatmapper(".pvtTotal.colTotal", "red")
+        heatmapper(".pivottable-total-row", "red")
+        heatmapper(".pivottable-total-col", "red")
         return this
     }
 
