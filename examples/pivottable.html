@@ -33,28 +33,31 @@
         new Pivot({
             container: $("#output"),
             data: [
-                {testRow: "test1", shape: "circle", testCol: "test3", testCol2: "test5", color: "1"},
-                {testRow: "test2", shape: "triangle", testCol: "test4", testCol2: "test6", color: "1"},
-                {testRow: "test1", shape: "circle", testCol: "test3", testCol2: "test7", color: "1"},
-                {testRow: "test1", shape: "triangle", testCol: "test4", testCol2: "test8", color: "2"},
-                {testRow: "test1", shape: "circle", testCol: "test3", testCol2: "test9", color: "2"},
-                {testRow: "test1", shape: "triangle", testCol: "test4", testCol2: "test10", color: "2"}
+                {testRow1: "1", testRow2: "row2-1", shape: "circle", testCol1: "col1-1", testCol2: "col2-1", color: "1-row1"},
+                {testRow1: "row1-1", testRow2: "row2-1", shape: "circle", testCol1: "col1-1", testCol2: "col2-1", color: "1"},
+                {testRow1: "row1-1", testRow2: "row2-2", shape: "triangle", testCol1: "col1-2", testCol2: "col2-2", color: "1"},
+                {testRow1: "row1-2", testRow2: "row2-3", shape: "circle", testCol1: "col1-1", testCol2: "col2-3", color: "1"},
+                {testRow1: "row1-2", testRow2: "row2-4", shape: "triangle", testCol1: "col1-2", testCol2: "col2-4", color: "1"},
+                {testRow1: "row1-1", testRow2: "row2-5", shape: "circle", testCol1: "col1-3", testCol2: "col2-5", color: "2"},
+                {testRow1: "row1-1", testRow2: "row2-6", shape: "triangle", testCol1: "col1-4", testCol2: "col2-6", color: "2"},
+                {testRow1: "row1-2", testRow2: "row2-7", shape: "circle", testCol1: "col1-3", testCol2: "col2-7", color: "2"},
+                {testRow1: "row1-2", testRow2: "row2-8", shape: "triangle", testCol1: "col1-4", testCol2: "col2-8", color: "2"}
             ],
-            rows: ["color", "testRow"],
-            cols: ["shape", "testCol2"]
+            rows: ["color", "testRow1", "testRow2"],
+            cols: ["shape", "testCol1", "testCol2"]
         })
 
         /*new Pivot({
-            container: $("#output2"),
-            data: function() {
-                return [
-                    {color: "blue", shape: "circle"},
-                    {color: "red", shape: "triangle"}
-                ]
-            },
-            rows: ["color"],
-            cols: ["shape"]
-        })*/
+         container: $("#output2"),
+         data: function() {
+         return [
+         {color: "blue", shape: "circle"},
+         {color: "red", shape: "triangle"}
+         ]
+         },
+         rows: ["color"],
+         cols: ["shape"]
+         })*/
     })
 </script>
 </body>

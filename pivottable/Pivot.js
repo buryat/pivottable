@@ -42,18 +42,17 @@ function(_, $, utils, Renderer) {
     return function Pivot(options) {
         options = $.extend(defaults, options)
 
-        var containerEl = options.container,
-            input = options.data
+        var input = options.data
 
         if (typeof input == "function") {
             input = input()
         }
 
-        var rows = [],
-            rowAs = [],
-            cols = [],
-            colAs = [],
-            tree = {},
+        var rowsHashes = [],
+            rowsNames = [],
+            colsHashes = [],
+            colsNames = [],
+            table = {},
             totals = {
                 rows: {},
                 cols: {},
@@ -61,61 +60,63 @@ function(_, $, utils, Renderer) {
             }
 
         utils.forEachRow(input, options.derivedAttributes, function(row) {
-            var c, cA, r, rA
+            var col_hash, row_hash, current_cols_names, current_row_names
             if (options.filter(row)) {
-                cA = _.filter(row, function(val, col) {
-                    return options.cols.indexOf(col) !== -1
+                current_cols_names = options.cols.map(function(x) {
+                    return row[x]
                 })
+                col_hash = current_cols_names.join(utils.joinString)
 
-                c = cA.join("-")
-
-
-                rA = _.filter(row, function(val, col) {
-                    return options.rows.indexOf(col) !== -1
+                current_row_names = options.rows.map(function(x) {
+                    return row[x]
                 })
-                r = rA.join("-")
+                row_hash = current_row_names.join(utils.joinString)
 
                 totals.all.push(row)
 
-                if (r !== "") {
-                    if (rows.indexOf(r) < 0) {
-                        rowAs.push(rA)
-                        rows.push(r)
+                if (row_hash !== "") {
+                    if (rowsHashes.indexOf(row_hash) === -1) {
+                        rowsNames.push(current_row_names)
+                        rowsHashes.push(row_hash)
                     }
-                    if (!totals.rows[r]) {
-                        totals.rows[r] = options.aggregator()
+                    if (!totals.rows[row_hash]) {
+                        totals.rows[row_hash] = options.aggregator()
                     }
-                    totals.rows[r].push(row)
+                    totals.rows[row_hash].push(row)
                 }
-                if (c !== "") {
-                    if (cols.indexOf(c) < 0) {
-                        colAs.push(cA)
-                        cols.push(c)
+                if (col_hash !== "") {
+                    if (colsHashes.indexOf(col_hash) === -1) {
+                        colsNames.push(current_cols_names)
+                        colsHashes.push(col_hash)
                     }
-                    if (!totals.cols[c]) {
-                        totals.cols[c] = options.aggregator()
+                    if (!totals.cols[col_hash]) {
+                        totals.cols[col_hash] = options.aggregator()
                     }
-                    totals.cols[c].push(row)
+                    totals.cols[col_hash].push(row)
                 }
-                if (c !== "" && r !== "") {
-                    if (!(r in tree)) {
-                        tree[r] = {}
+                if (col_hash !== "" && row_hash !== "") {
+                    if (!(row_hash in table)) {
+                        table[row_hash] = {}
                     }
-                    if (!(c in tree[r])) {
-                        tree[r][c] = options.aggregator()
+                    if (!(col_hash in table[row_hash])) {
+                        table[row_hash][col_hash] = options.aggregator()
                     }
 
-                    return tree[r][c].push(row)
+                    return table[row_hash][col_hash].push(row)
                 }
             }
         })
 
-        rowAs = rowAs.sort(arrSort)
-        colAs = colAs.sort(arrSort)
+        console.log(colsNames)
+        console.log(table)
+        console.log(totals)
 
-        var html = Renderer(options, colAs, rowAs, tree, totals)
+        rowsNames = rowsNames.sort(arrSort)
+        colsNames = colsNames.sort(arrSort)
 
-        containerEl.html(html)
+        var html = Renderer(options, colsNames, rowsNames, table, totals)
+
+        options.container.html(html)
         options.postProcessor(html)
     }
 

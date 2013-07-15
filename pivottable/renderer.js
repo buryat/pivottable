@@ -4,7 +4,7 @@
  * @time 7:14 AM
  * @description
  */
-define("pivottable/renderer", ["jquery", "underscore"], function($, _) {
+define("pivottable/renderer", ["jquery", "underscore", "pivottable/utilities"], function($, _, utils) {
     spanSize = function(arr, i, j) {
         var len, noDraw, stop, x
         if (i !== 0) {
@@ -34,7 +34,7 @@ define("pivottable/renderer", ["jquery", "underscore"], function($, _) {
         return len
     }
 
-    return function Renderer(option, colAs, rowAs, tree, totals) {
+    return function Renderer(option, colsNames, rowsNames, table, totals) {
         var result = $("<table class='table table-bordered pivottable'>")
 
         _.each(option.cols, function(c, j) {
@@ -45,8 +45,8 @@ define("pivottable/renderer", ["jquery", "underscore"], function($, _) {
                 tr.append($("<th>").attr("colspan", option.rows.length).attr("rowspan", option.cols.length))
             }
             tr.append($("<th class='pvtAxisLabel'>").text(c))
-            _.each(colAs, function(cA, i) {
-                var x = spanSize(colAs, parseInt(i), ji)
+            _.each(colsNames, function(cA, i) {
+                var x = spanSize(colsNames, parseInt(i), ji)
                 if (x !== -1) {
                     var th = $("<th class='pvtColLabel'>").text(cA[j]).attr("colspan", x)
                     if (ji === option.cols.length - 1 && option.rows.length !== 0) {
@@ -88,10 +88,10 @@ define("pivottable/renderer", ["jquery", "underscore"], function($, _) {
             }
         }
 
-        _.each(rowAs, function(rA, i) {
+        _.each(rowsNames, function(rA, i) {
             tr = $("<tr>")
             _.each(rA, function(txt, j) {
-                var x = spanSize(rowAs, parseInt(i), parseInt(j))
+                var x = spanSize(rowsNames, parseInt(i), parseInt(j))
                 if (x !== -1) {
                     th = $("<th class='pvtRowLabel'>").text(txt).attr("rowspan", x)
                     if (parseInt(j) === option.rows.length - 1 && option.cols.length !== 0) {
@@ -100,8 +100,9 @@ define("pivottable/renderer", ["jquery", "underscore"], function($, _) {
                     tr.append(th)
                 }
             })
-            _.each(colAs, function(cA, j) {
-                var _ref3 = tree[rA.join("-")][cA.join("-")],
+            // Fix: Really bad loop
+            _.each(colsNames, function(cA, j) {
+                var _ref3 = table[rA.join(utils.joinString)][cA.join(utils.joinString)],
                     aggregator = _ref3 != null ? _ref3 : nullAggregator,
                     val = aggregator.value()
                 tr.append(
@@ -111,7 +112,7 @@ define("pivottable/renderer", ["jquery", "underscore"], function($, _) {
                 )
             })
 
-            var _ref4 = totals.rows[rA.join("-")],
+            var _ref4 = totals.rows[rA.join(utils.joinString)],
                 totalAggregator = _ref4 != null ? _ref4 : nullAggregator,
                 val = totalAggregator.value()
             tr.append(
@@ -128,8 +129,8 @@ define("pivottable/renderer", ["jquery", "underscore"], function($, _) {
         th = $("<th class='pvtTotalLabel'>").text("Totals")
         th.attr("colspan", option.rows.length + (option.cols.length === 0 ? 0 : 1))
         tr.append(th)
-        _.each(colAs, function(ca, j) {
-            var _ref5 = totals.cols[ca.join("-")],
+        _.each(colsNames, function(ca, j) {
+            var _ref5 = totals.cols[ca.join(utils.joinString)],
                 totalAggregator = _ref5 != null ? _ref5 : nullAggregator,
                 val = totalAggregator.value()
 
@@ -143,7 +144,7 @@ define("pivottable/renderer", ["jquery", "underscore"], function($, _) {
         var val = totals.all.value()
         tr.append($("<td class='pvtGrandTotal'>").text(totals.all.format(val)).data("value", val))
         result.append(tr)
-        result.data("dimensions", [rowAs.length, colAs.length])
+        result.data("dimensions", [rowsNames.length, colsNames.length])
 
         return result
     }

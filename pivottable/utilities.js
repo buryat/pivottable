@@ -186,6 +186,8 @@ define(["underscore"], function(_) {
     }
 
     return {
+        joinString: String.fromCharCode(0) + "|",
+
         aggregators: {
             count: function() {
                 return function() {

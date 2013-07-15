@@ -190,6 +190,8 @@ define(
                         rows: []
                     }
 
+                var b = new Date().getTime()
+
                 $("#rows li nobr").each(function() {
                     return subopts.rows.push($(this).text())
                 })
@@ -226,7 +228,9 @@ define(
                 subopts.container = pivotTable
                 subopts.data = input
 
-                return new Pivot(subopts)
+                var pivot = new Pivot(subopts)
+                console.log(new Date().getTime() - b)
+                return pivot
             }
 
             refresh()
