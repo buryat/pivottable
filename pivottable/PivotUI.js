@@ -98,7 +98,7 @@ define(
                     return true
                 }
                 if (effectNames.length) {
-                    effect = $('input[name=effects]:checked').val()
+                    effect = $("input[name='pivottable-effects']:checked").val()
                     if (effect !== "None") {
                         subopts.postProcessor = options.effects[effect]
                     }
@@ -120,12 +120,11 @@ define(
                 form.append($("<strong>").text("Effects:"))
 
                 effectNames.forEach(function(x) {
-                    radio = $("<input type='radio' name='effects' id='pivottable-effects_" + (x.replace(/\s/g, "")) + "'>").val(x)
+                    radio = $("<input type='radio' name='pivottable-effects' id='pivottable-effects_" + (x.replace(/\s/g, "")) + "'>").val(x)
                     if (x === "None") {
                         radio.attr("checked", "checked")
                     }
-                    form.append(radio)
-                        .append(
+                    form.append(radio) .append(
                             $("<label class='checkbox inline' for='pivottable-effects_" + (x.replace(/\s/g, "")) + "'>").text(x)
                         )
                 })

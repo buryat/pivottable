@@ -13,21 +13,19 @@ define(
     "pivottable/renderer"
 ],
 function(_, $, utils, Renderer) {
-    Pivot.prototype.options = {
-        container: null,
-        data: null,
-        filter: function() {
-            return true
-        },
-        aggregator: utils.aggregators.count(),
-        derivedAttributes: {},
-        postProcessor: function() {
-        }
-    }
-
     function Pivot(options) {
-        options = $.extend(this.options, options)
-        this.options = options
+        var defaults = {
+            container: null,
+            data: null,
+            filter: function() {
+                return true
+            },
+            aggregator: utils.aggregators.count(),
+            derivedAttributes: {},
+            postProcessor: function() {}
+        }
+
+        options = $.extend(defaults, options)
 
         var input = options.data
 

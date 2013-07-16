@@ -110,13 +110,17 @@ define("pivottable/renderer", ["jquery", "underscore", "pivottable/utilities"], 
 
             _.each(colsNames, function(current_col_names, col_index) {
                 var _ref3 = _ref2 != null ? _ref2[current_col_names.join(utils.joinString)] : null,
-                    val = _ref3 != null ? _ref3.value() : ""
-                html += "<td class='pivottable-value' data-row='" + row_index + "' data-col='" + col_index + "' data-value='" + val + "'>" + aggregator.format(val) + "</td>"
+                    val = _ref3 != null ? _ref3.value() : "",
+                    formatted_val = _ref3 != null ? _ref3.format(val) : ""
+
+                html += "<td class='pivottable-value' data-row='" + row_index + "' data-col='" + col_index + "' data-value='" + val + "'>" + formatted_val + "</td>"
             })
 
             var _ref4 = totals.rows[current_row_names.join(utils.joinString)],
-                val = _ref4 != null ? _ref4.value() : ""
-            html += "<td class='pivottable-total-row' data-value='" + val + "' data-for-row='" + row_index + "'>" + totalAggregator.format(val) + "</td>"
+                val = _ref4 != null ? _ref4.value() : "",
+                formatted_val = _ref4 != null ? _ref4.format(val) : ""
+
+            html += "<td class='pivottable-total-row' data-value='" + val + "' data-for-row='" + row_index + "'>" + formatted_val + "</td>"
 
             html += "</tr>"
         })
