@@ -93,15 +93,6 @@ define("pivottable/renderer", ["jquery", "underscore", "pivottable/utilities"], 
             html += "</tr>"
         }
 
-        var nullAggregator = {
-            value: function() {
-                return null
-            },
-            format: function() {
-                return ""
-            }
-        }
-
         _.each(rowsNames, function(current_row_names, row_index) {
             html += "<tr>"
             _.each(current_row_names, function(row, current_row_index) {
@@ -117,17 +108,14 @@ define("pivottable/renderer", ["jquery", "underscore", "pivottable/utilities"], 
 
             var _ref2 = table[current_row_names.join(utils.joinString)]
 
-            // Fix: Really bad loop
             _.each(colsNames, function(current_col_names, col_index) {
                 var _ref3 = _ref2 != null ? _ref2[current_col_names.join(utils.joinString)] : null,
-                    aggregator = _ref3 != null ? _ref3 : nullAggregator,
-                    val = aggregator.value()
+                    val = _ref3 != null ? _ref3.value() : ""
                 html += "<td class='pivottable-value' data-row='" + row_index + "' data-col='" + col_index + "' data-value='" + val + "'>" + aggregator.format(val) + "</td>"
             })
 
             var _ref4 = totals.rows[current_row_names.join(utils.joinString)],
-                totalAggregator = _ref4 != null ? _ref4 : nullAggregator,
-                val = totalAggregator.value()
+                val = _ref4 != null ? _ref4.value() : ""
             html += "<td class='pivottable-total-row' data-value='" + val + "' data-for-row='" + row_index + "'>" + totalAggregator.format(val) + "</td>"
 
             html += "</tr>"
