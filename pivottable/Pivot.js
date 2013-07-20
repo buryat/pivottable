@@ -8,26 +8,33 @@ define(
 "pivottable/Pivot",
 [
     "underscore",
-    "jquery",
     "pivottable/utilities",
     "pivottable/renderer"
 ],
-function(_, $, utils, Renderer) {
-    function Pivot(options) {
-        var defaults = {
-            container: null,
-            data: null,
-            filter: function() {
-                return true
-            },
-            aggregator: utils.aggregators.count(),
-            derivedAttributes: {},
-            postProcessor: function() {}
+function(_, utils, Renderer) {
+    var defaults = {
+        container: null,
+        data: null,
+        filter: function() {
+            return true
+        },
+        aggregator: utils.aggregators.count(),
+        derivedAttributes: {},
+        postProcessor: function() {}
+    }
+
+    Pivot.prototype.updateOptions = function(options) {
+        if (!this.hasOwnProperty("options")) {
+            this.options = _.clone(defaults)
         }
+        _.extend(this.options, options)
 
-        options = $.extend(defaults, options)
+        return this
+    }
 
-        var input = options.data
+    Pivot.prototype.refresh = function() {
+        var options = this.options,
+            input = options.data
 
         if (typeof input == "function") {
             input = input()
@@ -90,7 +97,14 @@ function(_, $, utils, Renderer) {
             })
         })()
 
-        new Renderer(options, colsNames, rowsNames, table, totals)
+        Renderer(options, colsNames, rowsNames, table, totals)
+
+        return this
+    }
+
+    function Pivot(options) {
+        this.updateOptions(options)
+        this.refresh()
     }
 
     return Pivot

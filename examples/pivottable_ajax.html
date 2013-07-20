@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PivotTable AJAX</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+
+    <script src="libs/require.js"></script>
+    <script>
+        require.config({
+            paths: {
+                jquery: "libs/jquery-1.10.1",
+                underscore: "libs/lodash.min",
+                pivottable: "../pivottable"
+            },
+            shim: {
+                bootstrap: {
+                    deps: ["jquery"]
+                }
+            }
+        })
+    </script>
+    <link rel="stylesheet" href="../pivottable/pivottable.css"/>
+</head>
+<body>
+<div class="container" style="margin-top:40px">
+    <button class="btn">Refresh Pivot Table</button>
+    <div id="output"></div>
+</div>
+
+<script>
+    require(["jquery", "pivottable/Pivot"], function($, Pivot) {
+        var pivotObj = new Pivot({
+            container: $("#output"),
+            data: (function() {
+                var columns = ["col0", "col1", "col2", "col3"],
+                    rows = ["row0", "row1", "row2", "row3"]
+                return function() {
+                    var data = []
+                    for (var i = 0; i < Math.random() * 20; i++) {
+                        var data_row = {}
+                        columns.forEach(function(col) {
+                            data_row[col] = Math.floor(Math.random() * 10)
+                        })
+                        rows.forEach(function(row) {
+                            data_row[row] = Math.floor(Math.random() * 10)
+                        })
+                        data.push(data_row)
+                    }
+
+                    return data
+                }
+            })(),
+            rows: ["row0", "row1", "row2", "row3"],
+            cols: ["col0", "col1", "col2", "col3"]
+        })
+
+        $("button").click(pivotObj.refresh.bind(pivotObj))
+    })
+</script>
+</body>
+</html>

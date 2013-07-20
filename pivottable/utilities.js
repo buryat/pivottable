@@ -252,6 +252,7 @@ define(["underscore"], function(_) {
         },
 
         effects: {
+            "None": function() {},
             "Row Barchart": function(x) {
                 return x.barchart()
             },

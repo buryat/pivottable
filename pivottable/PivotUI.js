@@ -31,7 +31,9 @@ define(
         return function PivotUI(options) {
             var aggregator, axisValues, colList, controls, effectNames, form, pivotTable, radio, refresh, tblCols, tr1, tr2, uiTable
 
-            options = $.extend(defaults, options)
+            this.options = _.clone(defaults)
+            _.extend(this.options, options)
+            options = this.options
 
             var containerEl = options.container,
                 input = options.data
@@ -60,6 +62,8 @@ define(
             })
 
             effectNames = _.keys(options.effects)
+
+            var pivotObj
 
             refresh = function() {
                 var effect,
@@ -99,21 +103,22 @@ define(
                 }
                 if (effectNames.length) {
                     effect = $("input[name='pivottable-effects']:checked").val()
-                    if (effect !== "None") {
-                        subopts.postProcessor = options.effects[effect]
-                    }
+                    subopts.postProcessor = options.effects[effect]
                 }
 
                 subopts.container = pivotTable
                 subopts.data = input
 
-                new Pivot(subopts)
+                if (!pivotObj) {
+                    pivotObj = new Pivot(subopts)
+                } else {
+                    pivotObj.updateOptions(subopts)
+                }
             }
 
             uiTable = $("<table class='pivottable table-bordered'>")
 
             if (effectNames.length) {
-                effectNames.unshift("None")
                 controls = $("<td colspan='2'>")
                 form = $("<form class='form-inline pivottable-effects'>")
                 controls.append(form)
@@ -214,7 +219,7 @@ define(
             }
 
             refresh()
-            $('input[name=effects]').bind("change", refresh)
+            $("input[name='pivottable-effects']").bind("change", refresh)
             $(".pivottable-axis-container")
                 .sortable({
                     connectWith: ".pivottable-axis-container",
