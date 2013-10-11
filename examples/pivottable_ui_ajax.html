@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PivotTable UI AJAX</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+
+    <script src="libs/require.js"></script>
+    <script>
+        require.config({
+            paths: {
+                jquery: "libs/jquery-1.10.1",
+                jqueryui: "libs/jquery-ui-1.10.3.custom.min",
+                underscore: "libs/lodash.min",
+                pivottable: "../pivottable"
+            },
+            shim: {
+                bootstrap: {
+                    deps: ["jquery"]
+                }
+            }
+        })
+    </script>
+    <link rel="stylesheet" href="../pivottable/pivottable.css"/>
+</head>
+<body>
+<div class="container" style="margin: 20px">
+    <button class="btn">Refresh Pivot Table</button>
+    <div id="output"></div>
+</div>
+
+<script>
+    require(["jquery", "pivottable/utilities", "pivottable/PivotUIAjax"], function($, utils, PivotUIAjax) {
+        var pivotUIAjax = new PivotUIAjax({
+            container: $("#output"),
+            data: function(rows, columns, callback) {
+                var data = []
+                for (var i = 0; i < Math.random() * 1000; i++) {
+                    var data_row = {}
+                    columns.forEach(function(col) {
+                        data_row[col] = Math.floor(Math.random() * 10)
+                    })
+                    rows.forEach(function(row) {
+                        data_row[row] = Math.floor(Math.random() * 10)
+                    })
+                    data.push(data_row)
+                }
+
+                callback(data)
+            },
+            fields: [
+                "Province",
+                "Party",
+                "Age",
+                "Name",
+                "Gender"
+            ]
+        })
+
+        $("wbutton").click(pivotUIAjax.refresh.bind(pivotUIAjax))
+    })
+</script>
+</body>
+</html>

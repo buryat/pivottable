@@ -1,0 +1,37 @@
+table.pivottable {
+    width: auto;
+}
+
+.pivottable-values-list {
+    z-index: 100;
+    width: 280px;
+    height: 350px;
+    overflow: scroll;
+    border: 1px solid gray;
+    background: white;
+    display: none;
+    position: absolute;
+    padding: 20px;
+    color: black
+}
+
+.pivottable-effects {}
+    .pivottable-effects strong {
+        margin-right: 10px;
+        vertical-align: bottom;
+    }
+    .pivottable-effects label {
+        margin: 0 20px 0 10px
+    }
+
+.pivottable select {
+    width: 100px;
+}
+
+.pivottable-axis-container {}
+.pivottable-horizontal-list {}
+.pivottable-filter {}
+.pivottable-aggregator-select {}
+.pivottable-vals {}
+.pivottable-cols {}
+.pivottable-rows {}

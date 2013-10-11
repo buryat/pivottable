@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PivotTable UI</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+
+    <script src="libs/require.js"></script>
+    <script>
+        require.config({
+            paths: {
+                jquery: "libs/jquery-1.10.1",
+                jqueryui: "libs/jquery-ui-1.10.3.custom.min",
+                underscore: "libs/lodash.min",
+                pivottable: "../pivottable"
+            },
+            shim: {
+                bootstrap: {
+                    deps: ["jquery"]
+                }
+            }
+        })
+    </script>
+    <link rel="stylesheet" href="../pivottable/pivottable.css"/>
+</head>
+<body>
+<div class="container" style="margin: 20px">
+    <div id="output" class="table"></div>
+</div>
+
+<script>
+    require(["jquery", "pivottable/utilities", "pivottable/PivotUI"], function($, utils, PivotUI) {
+        $.getJSON("mps.json", function(mps) {
+            new PivotUI({
+                container: $("#output"),
+                data: mps,
+                derivedAttributes: {
+                    "Age Bin": utils.derivers.bin("Age", 10),
+                    "Gender Imbalance": function(mp) {
+                        return mp["Gender"] == "Male" ? 1 : -1;
+                    }
+                },
+                effectName: "Heatmap"
+            })
+        })
+    })
+</script>
+</body>
+</html>
